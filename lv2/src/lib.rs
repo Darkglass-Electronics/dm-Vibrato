@@ -14,7 +14,7 @@ struct Ports {
   output: OutputPort<Audio>,
 }
 
-#[uri("https://github.com/davemollen/dm-LFO")]
+#[uri("https://github.com/davemollen/dm-Vibrato")]
 struct DmVibrato {
   vibrato: Vibrato,
   is_active: bool,

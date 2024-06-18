@@ -19,7 +19,7 @@
 	mod:brand "DM" ;
 	mod:label "Vibrato" ;
 	rdfs:comment """
-A vibrato plugin effect written in Rust.
+A vibrato effect written in Rust.
 """ ;
 	lv2:requiredFeature lv2:inPlaceBroken ;
 	lv2:optionalFeature lv2:hardRTCapable ;

@@ -1,0 +1,11 @@
+[package]
+name = "dm_vibrato"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+lv2 = "0.6.0"
+vibrato = { path = "../vibrato" }
+
+[lib]
+crate-type = ["cdylib"]

@@ -9,7 +9,6 @@ struct Ports {
   depth: InputPort<Control>,
   shape: InputPort<Control>,
   offset: InputPort<Control>,
-  curve: InputPort<Control>,
   chance: InputPort<Control>,
   input: InputPort<Audio>,
   output: OutputPort<Audio>,
@@ -37,7 +36,7 @@ impl DmVibrato {
     }
   }
 
-  fn get_parameters(&self, ports: &mut Ports) -> (f32, f32, LfoShape, f32, f32, f32) {
+  fn get_parameters(&self, ports: &mut Ports) -> (f32, f32, LfoShape, f32, f32) {
     let depth = *ports.depth * 0.01;
 
     (
@@ -46,7 +45,6 @@ impl DmVibrato {
       Self::map_shape(*ports.shape),
       *ports.offset * 0.01,
       *ports.chance * 0.01,
-      2_f32.powf(*ports.curve * 0.02),
     )
   }
 }
@@ -70,7 +68,7 @@ impl Plugin for DmVibrato {
   // Process a chunk of audio. The audio ports are dereferenced to slices, which the plugin
   // iterates over.
   fn run(&mut self, ports: &mut Ports, _features: &mut (), _sample_count: u32) {
-    let (freq, depth, shape, offset, chance, curve) = self.get_parameters(ports);
+    let (freq, depth, shape, offset, chance) = self.get_parameters(ports);
 
     if !self.is_active {
       self.vibrato.initialize(chance);
@@ -80,7 +78,7 @@ impl Plugin for DmVibrato {
     for (input, output) in ports.input.iter().zip(ports.output.iter_mut()) {
       *output = self
         .vibrato
-        .process(*input, freq, depth, shape, offset, chance, curve);
+        .process(*input, freq, depth, shape, offset, chance);
     }
   }
 }

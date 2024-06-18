@@ -46,11 +46,8 @@ impl Vibrato {
     shape: LfoShape,
     offset: f32,
     chance: f32,
-    curve: f32,
   ) -> f32 {
-    let lfo = (self.lfo.process(freq, shape, chance) + offset)
-      .clamp(0., 1.)
-      .powf(curve);
+    let lfo = (self.lfo.process(freq, shape, chance) + offset).clamp(0., 1.);
     let time = Self::get_time(freq, lfo, depth);
     let time = self.smooth_time.process(time);
     let output = self.delay_line.read(time, Interpolation::Cubic);

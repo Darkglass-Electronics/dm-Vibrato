@@ -25,7 +25,7 @@ impl Vibrato {
   pub fn new(sample_rate: f32) -> Self {
     Self {
       delay_line: StereoDelayLine::new(
-        (MIN_LFO_FREQ.recip() * sample_rate * MAX_DEPTH / 1000. * 2.) as usize,
+        (MIN_LFO_FREQ.recip() * sample_rate * MAX_DEPTH / 1000.) as usize,
         sample_rate,
       ),
       smooth_time: RampSmooth::new(sample_rate, 20.),
@@ -56,6 +56,7 @@ impl Vibrato {
   }
 
   fn get_time(lfo: f32, freq: f32, depth: f32) -> f32 {
-    2_f32.powf(lfo) * freq.recip() * depth
+    let depth_correction = freq.recip();
+    2_f32.powf(lfo) * depth * depth_correction - depth_correction
   }
 }

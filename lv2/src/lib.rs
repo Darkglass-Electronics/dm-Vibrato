@@ -39,9 +39,11 @@ impl DmVibrato {
   }
 
   fn get_parameters(&self, ports: &mut Ports) -> (f32, f32, LfoShape, f32, f32, f32) {
+    let depth = *ports.depth * 0.01;
+
     (
       *ports.freq,
-      *ports.depth * 0.001,
+      depth * depth,
       Self::map_shape(*ports.shape),
       *ports.offset * 0.01,
       *ports.chance * 0.01,

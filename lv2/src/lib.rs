@@ -1,5 +1,5 @@
-extern crate lfo;
 extern crate lv2;
+extern crate vibrato;
 use lv2::prelude::*;
 use vibrato::{LfoShape, Vibrato, MAX_DEPTH};
 
@@ -13,8 +13,8 @@ struct Ports {
   chance: InputPort<Control>,
   input_left: InputPort<Audio>,
   input_right: InputPort<Audio>,
-  output_left: InputPort<Audio>,
-  output_right: InputPort<Audio>,
+  output_left: OutputPort<Audio>,
+  output_right: OutputPort<Audio>,
 }
 
 #[uri("https://github.com/davemollen/dm-LFO")]
@@ -43,7 +43,7 @@ impl DmVibrato {
 
     (
       *ports.freq,
-      depth * depth,
+      depth * depth * MAX_DEPTH,
       Self::map_shape(*ports.shape),
       *ports.offset * 0.01,
       *ports.chance * 0.01,
@@ -78,7 +78,7 @@ impl Plugin for DmVibrato {
       .iter_mut()
       .zip(ports.output_right.iter_mut());
 
-    for (((input_l, input_r), (output_l, output_r))) in input_channels.zip(output_channels) {
+    for ((input_l, input_r), (output_l, output_r)) in input_channels.zip(output_channels) {
       let output = self.vibrato.process(
         (*input_l, *input_r),
         freq,

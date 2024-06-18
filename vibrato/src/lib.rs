@@ -14,6 +14,7 @@ use {
 
 const MIN_LFO_FREQ: f32 = 0.1;
 pub const MAX_DEPTH: f32 = 100.;
+const DEPTH_OFFSET: f32 = 2.;
 
 pub struct Vibrato {
   delay_line: StereoDelayLine,
@@ -25,7 +26,7 @@ impl Vibrato {
   pub fn new(sample_rate: f32) -> Self {
     Self {
       delay_line: StereoDelayLine::new(
-        (MIN_LFO_FREQ.recip() * sample_rate * MAX_DEPTH / 1000.) as usize,
+        ((MIN_LFO_FREQ.recip() * MAX_DEPTH + DEPTH_OFFSET) / 1000. * sample_rate) as usize,
         sample_rate,
       ),
       smooth_time: RampSmooth::new(sample_rate, 20.),
@@ -56,7 +57,7 @@ impl Vibrato {
   }
 
   fn get_time(lfo: f32, freq: f32, depth: f32) -> f32 {
-    let depth_correction = freq.recip();
-    2_f32.powf(lfo) * depth * depth_correction - depth_correction
+    let depth = depth * freq.recip();
+    2_f32.powf(lfo) * depth - depth + DEPTH_OFFSET
   }
 }

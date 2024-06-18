@@ -11,15 +11,14 @@ struct Ports {
   offset: InputPort<Control>,
   curve: InputPort<Control>,
   chance: InputPort<Control>,
-  input_left: InputPort<Audio>,
-  input_right: InputPort<Audio>,
-  output_left: OutputPort<Audio>,
-  output_right: OutputPort<Audio>,
+  input: InputPort<Audio>,
+  output: OutputPort<Audio>,
 }
 
 #[uri("https://github.com/davemollen/dm-LFO")]
 struct DmVibrato {
   vibrato: Vibrato,
+  is_active: bool,
 }
 
 impl DmVibrato {
@@ -64,6 +63,7 @@ impl Plugin for DmVibrato {
   fn new(_plugin_info: &PluginInfo, _features: &mut ()) -> Option<Self> {
     Some(Self {
       vibrato: Vibrato::new(_plugin_info.sample_rate() as f32),
+      is_active: false,
     })
   }
 
@@ -72,24 +72,15 @@ impl Plugin for DmVibrato {
   fn run(&mut self, ports: &mut Ports, _features: &mut (), _sample_count: u32) {
     let (freq, depth, shape, offset, chance, curve) = self.get_parameters(ports);
 
-    let input_channels = ports.input_left.iter().zip(ports.input_right.iter());
-    let output_channels = ports
-      .output_left
-      .iter_mut()
-      .zip(ports.output_right.iter_mut());
+    if !self.is_active {
+      self.vibrato.initialize(chance);
+      self.is_active = true;
+    }
 
-    for ((input_l, input_r), (output_l, output_r)) in input_channels.zip(output_channels) {
-      let output = self.vibrato.process(
-        (*input_l, *input_r),
-        freq,
-        depth,
-        shape,
-        offset,
-        chance,
-        curve,
-      );
-      *output_l = output.0;
-      *output_r = output.1;
+    for (input, output) in ports.input.iter().zip(ports.output.iter_mut()) {
+      *output = self
+        .vibrato
+        .process(*input, freq, depth, shape, offset, chance, curve);
     }
   }
 }

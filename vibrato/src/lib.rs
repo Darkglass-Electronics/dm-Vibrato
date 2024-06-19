@@ -12,7 +12,7 @@ use {
   ramp_smooth::RampSmooth,
 };
 
-const MIN_LFO_FREQ: f32 = 0.1;
+pub const MIN_LFO_FREQ: f32 = 0.1;
 pub const MAX_DEPTH: f32 = 100.;
 const DEPTH_OFFSET: f32 = 2.;
 
@@ -44,12 +44,10 @@ impl Vibrato {
     freq: f32,
     depth: f32,
     shape: LfoShape,
-    offset: f32,
     chance: f32,
   ) -> f32 {
-    let lfo = (self.lfo.process(freq, shape, chance) + offset).clamp(0., 1.);
-    let time = Self::get_time(freq, lfo, depth);
-    let time = self.smooth_time.process(time);
+    let lfo = self.lfo.process(freq, shape, chance);
+    let time = self.smooth_time.process(Self::get_time(lfo, freq, depth));
     let output = self.delay_line.read(time, Interpolation::Cubic);
 
     self.delay_line.write(input);
@@ -58,7 +56,7 @@ impl Vibrato {
   }
 
   fn get_time(lfo: f32, freq: f32, depth: f32) -> f32 {
-    let depth = depth * freq.recip();
-    2_f32.powf(lfo) * depth - depth + DEPTH_OFFSET
+    let range = freq.recip() * depth;
+    2_f32.powf(lfo) * range - range + DEPTH_OFFSET
   }
 }

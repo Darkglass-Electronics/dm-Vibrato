@@ -7,7 +7,7 @@ use {
   std::f32::consts::{PI, TAU},
 };
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 pub enum LfoShape {
   Sine,
   Triangle,
@@ -49,20 +49,35 @@ impl Lfo {
     if trigger {
       self.is_enabled = fastrand::f32() <= chance;
     }
-    let phase = if self.is_enabled { phase } else { 0. };
 
     match shape {
-      LfoShape::Sine => (phase * TAU).fast_sin(),
+      LfoShape::Sine => {
+        let phase = if self.is_enabled { phase } else { 0. };
+        ((phase + 0.75) * TAU).fast_sin() * 0.5 + 0.5
+      }
       LfoShape::Triangle => {
+        let phase = if self.is_enabled { phase } else { 0. };
+
         if phase > 0.5 {
           (phase - 0.5) * -2. + 1.
         } else {
           phase * 2.
         }
       }
-      LfoShape::SawDown => 1. - phase,
-      LfoShape::SawUp => phase,
+      LfoShape::SawUp => {
+        let phase = if self.is_enabled { phase } else { 0. };
+        phase
+      }
+      LfoShape::SawDown => {
+        if self.is_enabled {
+          1. - phase
+        } else {
+          0.
+        }
+      }
       LfoShape::Rectangle => {
+        let phase = if self.is_enabled { phase } else { 0. };
+
         if phase > 0.5 {
           1.
         } else {
@@ -71,25 +86,31 @@ impl Lfo {
       }
       LfoShape::SampleAndHold => {
         if trigger {
-          self.target = fastrand::f32();
+          self.target = if self.is_enabled { fastrand::f32() } else { 0. };
         }
         self.target
       }
       LfoShape::Random => {
         if trigger {
           self.origin = self.target;
-          self.target = fastrand::f32();
+          self.target = if self.is_enabled { fastrand::f32() } else { 0. };
         }
         self.linear_interp(phase)
       }
       LfoShape::CurvedRandom => {
         if trigger {
           self.origin = self.target;
-          self.target = fastrand::f32();
+          self.target = if self.is_enabled { fastrand::f32() } else { 0. };
         }
         self.cosine_interp(phase)
       }
-      LfoShape::Noise => fastrand::f32(),
+      LfoShape::Noise => {
+        if fastrand::f32() <= chance {
+          fastrand::f32()
+        } else {
+          0.
+        }
+      }
     }
   }
 

@@ -56,7 +56,6 @@ impl Vibrato {
   }
 
   fn get_time(lfo: f32, freq: f32, depth: f32) -> f32 {
-    let range = freq.recip() * depth;
-    2_f32.powf(lfo) * range - range + DEPTH_OFFSET
+    lfo * freq.recip() * depth + DEPTH_OFFSET
   }
 }

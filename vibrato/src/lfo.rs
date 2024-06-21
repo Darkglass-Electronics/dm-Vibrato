@@ -51,12 +51,18 @@ impl Lfo {
 
     match shape {
       LfoShape::Sine => {
-        let phase = if self.is_enabled { phase } else { 0. };
+        if !self.is_enabled {
+          return 0.;
+        }
+
         ((phase + 0.75) * TAU).fast_sin() * 0.5 + 0.5
       }
       LfoShape::Triangle => {
-        let phase = if self.is_enabled { phase } else { 0. };
+        if !self.is_enabled {
+          return 0.;
+        }
 
+        let phase = Self::wrap(phase + 0.25);
         if phase > 0.5 {
           (phase - 0.5) * -2. + 1.
         } else {
@@ -64,20 +70,24 @@ impl Lfo {
         }
       }
       LfoShape::SawUp => {
-        let phase = if self.is_enabled { phase } else { 0. };
+        if !self.is_enabled {
+          return 0.;
+        }
+
         phase
       }
       LfoShape::SawDown => {
-        if self.is_enabled {
-          1. - phase
-        } else {
-          0.
+        if !self.is_enabled {
+          return 0.;
         }
+
+        1. - phase
       }
       LfoShape::Rectangle => {
         if !self.is_enabled {
           return 0.;
         }
+
         if phase > 0.5 {
           1.
         } else {
@@ -114,5 +124,13 @@ impl Lfo {
   fn cosine_interp(&self, mix: f32) -> f32 {
     let cosine_mix = (1. - (mix * PI).fast_cos()) * 0.5;
     self.origin * (1. - cosine_mix) + self.target * cosine_mix
+  }
+
+  fn wrap(x: f32) -> f32 {
+    if x >= 1. {
+      x - 1.
+    } else {
+      x
+    }
   }
 }

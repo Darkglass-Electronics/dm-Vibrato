@@ -30,7 +30,6 @@ impl DmVibrato {
       6. => LfoShape::SampleAndHold,
       7. => LfoShape::Random,
       8. => LfoShape::CurvedRandom,
-      9. => LfoShape::Noise,
       _ => panic!("Shape is invalid."),
     }
   }

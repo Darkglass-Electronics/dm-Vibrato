@@ -51,7 +51,7 @@ A vibrato effect written in Rust.
 		lv2:portProperty lv2:enumeration ;
 		lv2:default 1 ;
 		lv2:minimum 1 ;
-		lv2:maximum 9 ;
+		lv2:maximum 8 ;
 		lv2:scalePoint [rdfs:label "Sine"; rdf:value 1];
 		lv2:scalePoint [rdfs:label "Triangle"; rdf:value 2];
 		lv2:scalePoint [rdfs:label "Saw Up"; rdf:value 3];
@@ -60,7 +60,6 @@ A vibrato effect written in Rust.
 		lv2:scalePoint [rdfs:label "Sample & hold"; rdf:value 6];
 		lv2:scalePoint [rdfs:label "Random"; rdf:value 7];
 		lv2:scalePoint [rdfs:label "Curved Random"; rdf:value 8];
-		lv2:scalePoint [rdfs:label "Noise"; rdf:value 9];
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 3 ;

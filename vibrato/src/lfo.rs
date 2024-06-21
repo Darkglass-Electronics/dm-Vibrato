@@ -75,8 +75,9 @@ impl Lfo {
         }
       }
       LfoShape::Rectangle => {
-        let phase = if self.is_enabled { phase } else { 0. };
-
+        if !self.is_enabled {
+          return 0.;
+        }
         if phase > 0.5 {
           1.
         } else {

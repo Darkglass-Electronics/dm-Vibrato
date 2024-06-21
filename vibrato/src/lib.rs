@@ -1,11 +1,13 @@
 mod delay_line;
 mod lfo;
+mod log_smooth;
 mod ramp_smooth;
 mod shared {
   pub mod float_ext;
 }
 
 pub use lfo::LfoShape;
+use log_smooth::LogSmooth;
 use {
   delay_line::{DelayLine, Interpolation},
   lfo::Lfo,
@@ -18,6 +20,7 @@ const DEPTH_OFFSET: f32 = 2.;
 
 pub struct Vibrato {
   delay_line: DelayLine,
+  smooth_freq: LogSmooth,
   smooth_time: RampSmooth,
   lfo: Lfo,
 }
@@ -29,12 +32,14 @@ impl Vibrato {
         ((MIN_LFO_FREQ.recip() * MAX_DEPTH + DEPTH_OFFSET) / 1000. * sample_rate) as usize,
         sample_rate,
       ),
-      smooth_time: RampSmooth::new(sample_rate, 20.),
+      smooth_freq: LogSmooth::new(sample_rate, 0.25),
+      smooth_time: RampSmooth::new(sample_rate, 30.),
       lfo: Lfo::new(sample_rate),
     }
   }
 
-  pub fn initialize(&mut self, chance: f32) {
+  pub fn initialize(&mut self, freq: f32, chance: f32) {
+    self.smooth_freq.initialize(freq);
     self.lfo.initialize(chance);
   }
 
@@ -46,6 +51,7 @@ impl Vibrato {
     shape: LfoShape,
     chance: f32,
   ) -> f32 {
+    let freq = self.smooth_freq.process(freq);
     let lfo = self.lfo.process(freq, shape, chance);
     let time = self.smooth_time.process(Self::get_time(lfo, freq, depth));
     let output = self.delay_line.read(time, Interpolation::Cubic);

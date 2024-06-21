@@ -32,3 +32,24 @@ textbox:hover {
   border-width: 0px;
   outline-color: none;
 }
+
+dropdown {
+  height: 32px;
+}
+
+dropdown .title {
+  width: 1s;
+  height: 1s;
+  child-left: 8px;
+  child-right: 8px;
+  child-top: 1s;
+  child-bottom: 1s;
+  color: #363636;
+  bottom: 6px;
+}
+
+dropdown .dropdown-item {
+  child-left: 8px;
+  child-right: 8px;
+  color: #363636;
+}

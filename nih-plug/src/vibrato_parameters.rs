@@ -41,10 +41,22 @@ pub enum LfoShape {
   #[id = "curved_random"]
   #[name = "Curved Random"]
   CurvedRandom,
+}
 
-  #[id = "noise"]
-  #[name = "Noise"]
-  Noise,
+impl LfoShape {
+  pub fn to_string(self) -> String {
+    match self {
+      LfoShape::Sine => "Sine",
+      LfoShape::Triangle => "Triangle",
+      LfoShape::SawUp => "Saw Up",
+      LfoShape::SawDown => "Saw Down",
+      LfoShape::Rectangle => "Rectangle",
+      LfoShape::SampleAndHold => "Sample And Hold",
+      LfoShape::Random => "Random",
+      LfoShape::CurvedRandom => "Curved Random",
+    }
+    .to_string()
+  }
 }
 
 #[derive(Params)]

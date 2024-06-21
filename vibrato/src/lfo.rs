@@ -17,7 +17,6 @@ pub enum LfoShape {
   SampleAndHold,
   Random,
   CurvedRandom,
-  Noise,
 }
 
 pub struct Lfo {
@@ -103,13 +102,6 @@ impl Lfo {
           self.target = if self.is_enabled { fastrand::f32() } else { 0. };
         }
         self.cosine_interp(phase)
-      }
-      LfoShape::Noise => {
-        if fastrand::f32() <= chance {
-          fastrand::f32()
-        } else {
-          0.
-        }
       }
     }
   }

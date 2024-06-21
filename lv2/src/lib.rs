@@ -69,7 +69,7 @@ impl Plugin for DmVibrato {
     let (freq, depth, shape, chance) = self.get_parameters(ports);
 
     if !self.is_active {
-      self.vibrato.initialize(chance);
+      self.vibrato.initialize(freq, chance);
       self.is_active = true;
     }
 

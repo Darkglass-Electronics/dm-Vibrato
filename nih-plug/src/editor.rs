@@ -22,7 +22,7 @@ const STYLE: &str = include_str!("./editor/style.css");
 
 // Makes sense to also define this here, makes it a bit easier to keep track of
 pub(crate) fn default_state() -> Arc<ViziaState> {
-  ViziaState::new(|| (416, 232))
+  ViziaState::new(|| (256, 256))
 }
 
 pub(crate) fn create(
@@ -42,81 +42,82 @@ pub(crate) fn create(
       .build(cx);
 
       VStack::new(cx, |cx| {
-        HStack::new(cx, |cx| {
-          ParamKnob::new(
-            cx,
-            params.freq.name(),
-            UiData::params,
-            params.freq.as_ptr(),
-            |params| &params.freq,
-            |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-            ParamKnobSize::Regular,
-          );
+        VStack::new(cx, |cx| {
+          HStack::new(cx, |cx| {
+            ParamKnob::new(
+              cx,
+              params.freq.name(),
+              UiData::params,
+              params.freq.as_ptr(),
+              |params| &params.freq,
+              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+              ParamKnobSize::Regular,
+            );
 
-          ParamKnob::new(
-            cx,
-            params.depth.name(),
-            UiData::params,
-            params.depth.as_ptr(),
-            |params| &params.depth,
-            |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-            ParamKnobSize::Regular,
-          );
+            ParamKnob::new(
+              cx,
+              params.depth.name(),
+              UiData::params,
+              params.depth.as_ptr(),
+              |params| &params.depth,
+              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+              ParamKnobSize::Regular,
+            );
 
-          ParamKnob::new(
-            cx,
-            params.chance.name(),
-            UiData::params,
-            params.chance.as_ptr(),
-            |params| &params.chance,
-            |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-            ParamKnobSize::Regular,
-          );
+            ParamKnob::new(
+              cx,
+              params.chance.name(),
+              UiData::params,
+              params.chance.as_ptr(),
+              |params| &params.chance,
+              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+              ParamKnobSize::Regular,
+            );
+          })
+          .child_left(Stretch(1.0))
+          .child_right(Stretch(1.0));
 
-          Dropdown::new(
-            cx,
-            |cx| {
-              let shape = UiData::params
-                .map(move |params| params.shape.value())
-                .get(cx);
+          VStack::new(cx, |cx| {
+            Label::new(cx, params.shape.name())
+              .font_size(13.0)
+              .font_weight(FontWeightKeyword::Bold)
+              .text_wrap(false)
+              .child_space(Stretch(1.0));
 
-              Label::new(
-                cx,
-                match shape {
-                  LfoShape::Sine => "Sine",
-                  LfoShape::Triangle => "Triangle",
-                  LfoShape::SawUp => "Saw Up",
-                  LfoShape::SawDown => "Saw Down",
-                  LfoShape::Rectangle => "Rectangle",
-                  LfoShape::SampleAndHold => "Sample And Hold",
-                  LfoShape::Random => "Random",
-                  LfoShape::CurvedRandom => "Curved Random",
-                  LfoShape::Noise => "Noise",
-                },
-              )
-            },
-            |cx| {
-              let lens = UiData::params;
+            Dropdown::new(
+              cx,
+              |cx| {
+                Label::new(
+                  cx,
+                  UiData::params.map(|params| params.shape.value().to_string()),
+                )
+              },
+              |cx| {
+                let lens = UiData::params;
 
-              for text in LfoShape::variants() {
-                Label::new(cx, *text)
-                  .on_press(move |cx| {
-                    cx.emit(ParamChangeEvent::SetParam(
-                      lens.map(move |params| params.shape.as_ptr()).get(cx),
-                      lens
-                        .map(move |params| params.shape.string_to_normalized_value(*text))
-                        .get(cx)
-                        .unwrap_or_default(),
-                    ));
-                    cx.emit(PopupEvent::Close); // close the popup
-                  })
-                  .width(Stretch(1.0));
-              }
-            },
-          )
-          .width(Pixels(160.));
-        })
-        .child_space(Stretch(1.0));
+                for text in LfoShape::variants() {
+                  Label::new(cx, *text)
+                    .on_press(move |cx| {
+                      cx.emit(ParamChangeEvent::SetParam(
+                        lens.map(move |params| params.shape.as_ptr()).get(cx),
+                        lens
+                          .map(move |params| params.shape.string_to_normalized_value(*text))
+                          .get(cx)
+                          .unwrap_or_default(),
+                      ));
+                      cx.emit(PopupEvent::Close);
+                    })
+                    .width(Stretch(1.0))
+                    .class("dropdown-item");
+                }
+              },
+            );
+          })
+          .width(Pixels(144.))
+          .left(Stretch(1.0))
+          .right(Stretch(1.0))
+          .top(Pixels(8.0));
+        });
 
         Label::new(cx, "Vibrato")
           .font_size(22.0)

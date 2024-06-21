@@ -26,7 +26,6 @@ impl DmVibrato {
         LfoShapeParam::SampleAndHold => LfoShape::SampleAndHold,
         LfoShapeParam::Random => LfoShape::Random,
         LfoShapeParam::CurvedRandom => LfoShape::CurvedRandom,
-        LfoShapeParam::Noise => LfoShape::Noise,
       },
       self.params.chance.value(),
     )
@@ -79,7 +78,8 @@ impl Plugin for DmVibrato {
     _context: &mut impl InitContext<Self>,
   ) -> bool {
     self.vibrato = Vibrato::new(buffer_config.sample_rate);
-    self.vibrato.initialize(self.params.chance.value());
+    let (freq, _, _, chance) = self.map_params();
+    self.vibrato.initialize(freq, chance);
 
     true
   }

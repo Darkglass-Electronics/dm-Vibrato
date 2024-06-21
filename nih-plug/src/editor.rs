@@ -111,7 +111,8 @@ pub(crate) fn create(
                     .class("dropdown-item");
                 }
               },
-            );
+            )
+            .top(Pixels(6.0));
           })
           .width(Pixels(144.))
           .left(Stretch(1.0))

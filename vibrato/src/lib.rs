@@ -7,10 +7,10 @@ mod shared {
 }
 
 pub use lfo::LfoShape;
-use log_smooth::LogSmooth;
 use {
   delay_line::{DelayLine, Interpolation},
   lfo::Lfo,
+  log_smooth::LogSmooth,
   ramp_smooth::RampSmooth,
 };
 

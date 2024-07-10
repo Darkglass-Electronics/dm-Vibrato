@@ -5,3 +5,4 @@
     a lv2:Plugin ;
     lv2:binary <libdm_vibrato.so> ;
     rdfs:seeAlso <dm-Vibrato.ttl>  .
+<https://github.com/davemollen/dm-Vibrato> rdfs:seeAlso <modgui.ttl> .

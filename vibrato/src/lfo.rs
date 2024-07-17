@@ -74,14 +74,14 @@ impl Lfo {
           return 0.;
         }
 
-        phase
+        1. - phase
       }
       LfoShape::SawDown => {
         if !self.is_enabled {
           return 0.;
         }
 
-        1. - phase
+        phase
       }
       LfoShape::Rectangle => {
         if !self.is_enabled {

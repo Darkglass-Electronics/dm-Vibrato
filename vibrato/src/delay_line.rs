@@ -61,7 +61,7 @@ impl DelayLine {
 
     let x = self.buffer[index & self.wrap];
     let y = self.buffer[index + 1 & self.wrap];
-    x * (1. - mix) + y * mix
+    x + (y - x) * mix
   }
 
   fn cosine_interp(&self, time: f32) -> f32 {
@@ -74,7 +74,7 @@ impl DelayLine {
     let cosine_mix = (1. - (mix * PI).cos()) / 2.;
     let x = self.buffer[index & self.wrap];
     let y = self.buffer[index + 1 & self.wrap];
-    x * (1. - cosine_mix) + y * cosine_mix
+    x + (y - x) * cosine_mix
   }
 
   fn cubic_interp(&self, time: f32) -> f32 {

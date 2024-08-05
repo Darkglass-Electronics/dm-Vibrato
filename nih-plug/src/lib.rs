@@ -16,7 +16,7 @@ impl DmVibrato {
 
     (
       self.params.freq.value(),
-      depth * MAX_DEPTH,
+      depth * depth * MAX_DEPTH,
       match self.params.shape.value() {
         LfoShapeParam::Sine => LfoShape::Sine,
         LfoShapeParam::Triangle => LfoShape::Triangle,

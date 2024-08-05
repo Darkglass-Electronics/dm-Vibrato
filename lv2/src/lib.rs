@@ -39,7 +39,7 @@ impl DmVibrato {
 
     (
       *ports.freq,
-      depth * MAX_DEPTH,
+      depth * depth * MAX_DEPTH,
       Self::map_shape(*ports.shape),
       *ports.chance * 0.01,
     )

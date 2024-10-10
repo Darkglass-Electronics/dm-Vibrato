@@ -9,10 +9,6 @@ DM_VIBRATO_SITE = https://github.com/davemollen/dm-Vibrato.git
 DM_VIBRATO_SITE_METHOD = git
 DM_VIBRATO_BUNDLES = dm-Vibrato.lv2
 
-define DM_VIBRATO_CONFIGURE_CMDS
-	~/.cargo/bin/rustup default stable
-endef
-
 define DM_VIBRATO_BUILD_CMDS
 	rm -f $(@D)/lv2/dm-Vibrato.lv2/libdm_vibrato.so
 	(cd $(@D)/lv2 && \

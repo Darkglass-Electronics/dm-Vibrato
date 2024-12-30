@@ -1,6 +1,6 @@
 use nih_plug::prelude::*;
 use std::sync::Arc;
-use vibrato::{LfoShape, Vibrato, MAX_DEPTH};
+use vibrato::{Params as ProcessParams, Vibrato};
 mod vibrato_parameters;
 use vibrato_parameters::{LfoShape as LfoShapeParam, VibratoParameters};
 mod editor;
@@ -8,28 +8,7 @@ mod editor;
 struct DmVibrato {
   params: Arc<VibratoParameters>,
   vibrato: Vibrato,
-}
-
-impl DmVibrato {
-  fn map_params(&self) -> (f32, f32, LfoShape, f32) {
-    let depth = self.params.depth.value();
-
-    (
-      self.params.freq.value(),
-      depth * depth * MAX_DEPTH,
-      match self.params.shape.value() {
-        LfoShapeParam::Sine => LfoShape::Sine,
-        LfoShapeParam::Triangle => LfoShape::Triangle,
-        LfoShapeParam::SawUp => LfoShape::SawUp,
-        LfoShapeParam::SawDown => LfoShape::SawDown,
-        LfoShapeParam::Rectangle => LfoShape::Rectangle,
-        LfoShapeParam::SampleAndHold => LfoShape::SampleAndHold,
-        LfoShapeParam::Random => LfoShape::Random,
-        LfoShapeParam::CurvedRandom => LfoShape::CurvedRandom,
-      },
-      self.params.chance.value(),
-    )
-  }
+  process_params: ProcessParams,
 }
 
 impl Default for DmVibrato {
@@ -38,6 +17,7 @@ impl Default for DmVibrato {
     Self {
       params: params.clone(),
       vibrato: Vibrato::new(44100.),
+      process_params: ProcessParams::new(44100.),
     }
   }
 }
@@ -78,9 +58,7 @@ impl Plugin for DmVibrato {
     _context: &mut impl InitContext<Self>,
   ) -> bool {
     self.vibrato = Vibrato::new(buffer_config.sample_rate);
-    let (freq, _, _, chance) = self.map_params();
-    self.vibrato.initialize(freq, chance);
-
+    self.process_params = ProcessParams::new(buffer_config.sample_rate);
     true
   }
 
@@ -90,11 +68,16 @@ impl Plugin for DmVibrato {
     _aux: &mut AuxiliaryBuffers,
     _context: &mut impl ProcessContext<Self>,
   ) -> ProcessStatus {
-    let (freq, depth, shape, chance) = self.map_params();
+    self.process_params.set(
+      self.params.freq.value(),
+      self.params.depth.value(),
+      self.params.shape.value() as i32,
+      self.params.chance.value(),
+    );
 
     buffer.iter_samples().for_each(|mut channel_samples| {
       let sample = channel_samples.iter_mut().next().unwrap();
-      *sample = self.vibrato.process(*sample, freq, depth, shape, chance);
+      *sample = self.vibrato.process(*sample, &mut self.process_params);
     });
     ProcessStatus::Normal
   }

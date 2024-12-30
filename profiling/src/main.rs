@@ -1,18 +1,14 @@
 mod utils;
 use utils::generate_signal;
-use vibrato::{LfoShape, Vibrato};
+use vibrato::{Params, Vibrato};
 
 fn main() {
   let mut vibrato = Vibrato::new(44100.);
-
-  let freq = 4.;
-  let depth = 0.1;
-  let shape = LfoShape::Sine;
-  let chance = 1.;
-  vibrato.initialize(freq, chance);
+  let mut params = Params::new(44100.);
+  params.set(4., 0.1, 0, 1.);
 
   loop {
     let input = generate_signal();
-    vibrato.process(input, freq, depth, shape, chance);
+    vibrato.process(input, &mut params);
   }
 }

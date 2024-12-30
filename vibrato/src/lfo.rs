@@ -1,23 +1,11 @@
 mod delta;
 mod phasor;
 use {
-  crate::shared::float_ext::FloatExt,
+  crate::{params::LfoShape, shared::float_ext::FloatExt},
   delta::Delta,
   phasor::Phasor,
   std::f32::consts::{PI, TAU},
 };
-
-#[derive(Clone, Copy)]
-pub enum LfoShape {
-  Sine,
-  Triangle,
-  SawUp,
-  SawDown,
-  Rectangle,
-  SampleAndHold,
-  Random,
-  CurvedRandom,
-}
 
 pub struct Lfo {
   phasor: Phasor,

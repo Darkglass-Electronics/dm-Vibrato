@@ -86,7 +86,7 @@ impl Default for VibratoParameters {
 
       freq: FloatParam::new(
         "Freq",
-        2.,
+        5.,
         FloatRange::Skewed {
           min: MIN_LFO_FREQ,
           max: 30.,
@@ -96,7 +96,7 @@ impl Default for VibratoParameters {
       .with_value_to_string(v2s_f32_hz_then_khz(2))
       .with_string_to_value(s2v_f32_hz_then_khz()),
 
-      depth: FloatParam::new("Depth", 0.1, FloatRange::Linear { min: 0., max: 1. })
+      depth: FloatParam::new("Depth", 0.33, FloatRange::Linear { min: 0., max: 1. })
         .with_unit(" %")
         .with_value_to_string(v2s_f32_percentage(2))
         .with_string_to_value(s2v_f32_percentage()),

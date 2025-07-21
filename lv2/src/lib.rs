@@ -5,12 +5,12 @@ use vibrato::{Params, Vibrato};
 
 #[derive(PortCollection)]
 struct Ports {
-  freq: InputPort<Control>,
-  depth: InputPort<Control>,
-  shape: InputPort<Control>,
-  chance: InputPort<Control>,
-  input: InputPort<Audio>,
-  output: OutputPort<Audio>,
+  freq: InputPort<InPlaceControl>,
+  depth: InputPort<InPlaceControl>,
+  shape: InputPort<InPlaceControl>,
+  chance: InputPort<InPlaceControl>,
+  input: InputPort<InPlaceAudio>,
+  output: OutputPort<InPlaceAudio>,
 }
 
 #[uri("https://github.com/davemollen/dm-Vibrato")]
@@ -41,14 +41,15 @@ impl Plugin for DmVibrato {
   // iterates over.
   fn run(&mut self, ports: &mut Ports, _features: &mut (), _sample_count: u32) {
     self.params.set(
-      *ports.freq,
-      *ports.depth * 0.01,
-      *ports.shape as i32 - 1,
-      *ports.chance * 0.01,
+      ports.freq.get(),
+      ports.depth.get() * 0.01,
+      ports.shape.get() as i32 - 1,
+      ports.chance.get() * 0.01,
     );
 
-    for (input, output) in ports.input.iter().zip(ports.output.iter_mut()) {
-      *output = self.vibrato.process(*input, &mut self.params);
+    for (input, output) in ports.input.iter().zip(ports.output.iter()) {
+      let vibrato_output = self.vibrato.process(input.get(), &mut self.params);
+      output.set(vibrato_output);
     }
   }
 }

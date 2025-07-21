@@ -1,2 +1,6 @@
 target
 .DS_Store
+*.svg
+*libdm_vibrato.so
+*libdm_vibrato.dylib
+*libdm_vibrato.dll

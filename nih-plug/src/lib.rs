@@ -23,7 +23,7 @@ impl Default for DmVibrato {
 }
 
 impl Plugin for DmVibrato {
-  const NAME: &'static str = "dm-Vibrato";
+  const NAME: &'static str = "Vibrato";
   const VENDOR: &'static str = "DM";
   const URL: &'static str = "https://github.com/davemollen/dm-Vibrato";
   const EMAIL: &'static str = "davemollen@gmail.com";

@@ -34,13 +34,13 @@ impl Vibrato {
   pub fn process(&mut self, input: f32, params: &mut Params) -> f32 {
     let Params {
       shape,
-      chance,
       depth,
       ..
     } = *params;
     let freq = params.freq.next();
+    let wet = params.wet.next();
 
-    let lfo = self.lfo.process(freq, shape, chance);
+    let lfo = self.lfo.process(freq, shape);
     params
       .time
       .set_target(lfo * freq.recip() * depth + DEPTH_OFFSET);
@@ -49,6 +49,6 @@ impl Vibrato {
 
     self.delay_line.write(input);
 
-    output
+    output * wet + input * (1.0 - wet)
   }
 }

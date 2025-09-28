@@ -11,18 +11,15 @@ pub enum LfoShape {
   Triangle,
   SawUp,
   SawDown,
-  Rectangle,
-  SampleAndHold,
-  Random,
-  CurvedRandom,
+  Square,
 }
 
 pub struct Params {
   pub freq: LogarithmicSmooth,
   pub depth: f32,
   pub shape: LfoShape,
-  pub chance: f32,
   pub time: LinearSmooth,
+  pub wet: LogarithmicSmooth,
   is_initialized: bool,
 }
 
@@ -32,31 +29,33 @@ impl Params {
       freq: LogarithmicSmooth::new(sample_rate, 0.25),
       depth: 0.,
       shape: LfoShape::Sine,
-      chance: 0.,
       time: LinearSmooth::new(sample_rate, 30.),
+      wet: LogarithmicSmooth::new(sample_rate, 0.03),
       is_initialized: false,
     }
   }
 
-  pub fn set(&mut self, freq: f32, depth: f32, shape: i32, chance: f32) {
+  pub fn reset(&mut self) {
+    self.is_initialized = false;
+  }
+
+  pub fn set(&mut self, freq: f32, depth: f32, shape: i32, wet: f32) {
     self.depth = depth * depth * MAX_DEPTH;
     self.shape = match shape {
       0 => LfoShape::Sine,
       1 => LfoShape::Triangle,
       2 => LfoShape::SawUp,
       3 => LfoShape::SawDown,
-      4 => LfoShape::Rectangle,
-      5 => LfoShape::SampleAndHold,
-      6 => LfoShape::Random,
-      7 => LfoShape::CurvedRandom,
+      4 => LfoShape::Square,
       _ => panic!("Unknown lfo shape"),
     };
-    self.chance = chance;
 
     if self.is_initialized {
       self.freq.set_target(freq);
+      self.wet.set_target(wet);
     } else {
       self.freq.reset(freq);
+      self.wet.reset(wet);
       self.is_initialized = true;
     }
   }

@@ -2,6 +2,23 @@
 
 A mono vibrato effect written in Rust.
 
+---
+
+**This is a forked version for use within Darkglass which modifies the LV2 version.**  
+**The URI has also been changed as to not conflict with the original.**
+
+List of changes so far:
+- Added dg:abbreviation, for Anagram
+- Added lv2:enabled control, for smooth bypass
+- Removed "chance" control
+- Removed "Sample&Hold" and "Random" shape types
+- Removed modgui
+- Reorder ports matching other Darkglass plugins
+
+The original README contents follows after this line.
+
+---
+
 The effect can be compiled to a [MOD audio](https://mod.audio/), VST3, CLAP, AUv2 or LV2 plugin.
 
 ## Table of contents:

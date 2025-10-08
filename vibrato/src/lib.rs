@@ -31,6 +31,11 @@ impl Vibrato {
     }
   }
 
+  pub fn reset(&mut self) {
+    self.delay_line.reset();
+    self.lfo.reset();
+  }
+
   pub fn process(&mut self, input: f32, params: &mut Params) -> f32 {
     let Params {
       shape,
@@ -41,9 +46,17 @@ impl Vibrato {
     let wet = params.wet.next();
 
     let lfo = self.lfo.process(freq, shape);
-    params
-      .time
-      .set_target(lfo * freq.recip() * depth + DEPTH_OFFSET);
+    if !params.time_is_initialized {
+      params
+        .time
+        .reset(lfo * freq.recip() * depth + DEPTH_OFFSET);
+      params
+        .time_is_initialized = true;
+    } else {
+      params
+        .time
+        .set_target(lfo * freq.recip() * depth + DEPTH_OFFSET);
+    }
     let time = params.time.next();
     let output = self.delay_line.read(time, Interpolation::Cubic);
 

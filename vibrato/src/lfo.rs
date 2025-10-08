@@ -20,6 +20,12 @@ impl Lfo {
     }
   }
 
+  pub fn reset(&mut self) {
+    self.phasor.reset();
+    self.origin = 0.;
+    self.target = 0.;
+  }
+
   pub fn process(&mut self, freq: f32, shape: LfoShape) -> f32 {
     let phase = self.phasor.process(freq);
 

@@ -1,6 +1,7 @@
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix dg:    <http://www.darkglass.com/lv2/ns#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix kx:    <http://kxstudio.sf.net/ns/lv2ext/props#> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
 @prefix pg:    <http://lv2plug.in/ns/ext/port-groups#> .
 @prefix pp:    <http://lv2plug.in/ns/ext/port-props#> .
@@ -58,6 +59,16 @@ A mono vibrato effect.
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 3 ;
+		lv2:symbol "reset" ;
+		lv2:name "Reset" ;
+		lv2:designation kx:Reset ;
+		lv2:portProperty lv2:toggled, pp:trigger ;
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+	], [
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 4 ;
 		lv2:symbol "freq" ;
 		lv2:name "Freq" ;
 		lv2:portProperty pp:logarithmic ;
@@ -67,7 +78,7 @@ A mono vibrato effect.
 		units:unit units:hz
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
-		lv2:index 4 ;
+		lv2:index 5 ;
 		lv2:symbol "depth" ;
 		lv2:name "Depth" ;
 		lv2:default 33.0 ;
@@ -76,7 +87,7 @@ A mono vibrato effect.
 		units:unit units:pc
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
-		lv2:index 5 ;
+		lv2:index 6 ;
 		lv2:symbol "shape" ;
 		lv2:name "Shape" ;
 		lv2:portProperty lv2:integer;

@@ -8,6 +8,7 @@ struct Ports {
   input: InputPort<InPlaceAudio>,
   output: OutputPort<InPlaceAudio>,
   enabled: InputPort<InPlaceControl>,
+  reset: InputPort<InPlaceControl>,
   freq: InputPort<InPlaceControl>,
   depth: InputPort<InPlaceControl>,
   shape: InputPort<InPlaceControl>,
@@ -44,6 +45,11 @@ impl Plugin for DmVibrato {
   // Process a chunk of audio. The audio ports are dereferenced to slices, which the plugin
   // iterates over.
   fn run(&mut self, ports: &mut Ports, _features: &mut (), _sample_count: u32) {
+    if ports.reset.get() >= 0.5 {
+      self.vibrato.reset();
+      self.params.reset();
+    }
+
     self.params.set(
       ports.freq.get(),
       ports.depth.get() * 0.01,

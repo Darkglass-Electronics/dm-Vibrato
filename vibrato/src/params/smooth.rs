@@ -35,6 +35,7 @@ impl LinearSmooth {
 impl Smoother for LinearSmooth {
   fn reset(&mut self, target: f32) {
     self.current = target;
+    self.target = target;
     self.step_counter = 0;
   }
 
@@ -82,6 +83,7 @@ impl ExponentialSmooth {
 impl Smoother for ExponentialSmooth {
   fn reset(&mut self, target: f32) {
     self.current = target;
+    self.target = target;
     self.is_active = false;
   }
 
@@ -128,6 +130,7 @@ impl LogarithmicSmooth {
 impl Smoother for LogarithmicSmooth {
   fn reset(&mut self, target: f32) {
     self.current = target;
+    self.target = target;
     self.is_active = false;
   }
 

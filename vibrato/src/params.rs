@@ -20,7 +20,8 @@ pub struct Params {
   pub shape: LfoShape,
   pub time: LinearSmooth,
   pub wet: LogarithmicSmooth,
-  is_initialized: bool,
+  pub is_initialized: bool,
+  pub time_is_initialized: bool,
 }
 
 impl Params {
@@ -32,11 +33,13 @@ impl Params {
       time: LinearSmooth::new(sample_rate, 30.),
       wet: LogarithmicSmooth::new(sample_rate, 0.03),
       is_initialized: false,
+      time_is_initialized: false,
     }
   }
 
   pub fn reset(&mut self) {
     self.is_initialized = false;
+    self.time_is_initialized = false;
   }
 
   pub fn set(&mut self, freq: f32, depth: f32, shape: i32, wet: f32) {

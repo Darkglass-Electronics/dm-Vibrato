@@ -11,9 +11,11 @@ List of changes so far:
 - Added dg:abbreviation, for Anagram
 - Added lv2:enabled control, for smooth bypass
 - Removed "chance" control
-- Removed "Sample&Hold" and "Random" shape types
+- Removed "Sample&Hold" and "Random" shape types, hid "Saw up", "Saw down" and "Square"
 - Removed modgui
 - Reorder ports matching other Darkglass plugins
+- Added reset port and its implementation (resetting memory and smoothed values jumping straight to targets)
+- Renamed "Freq" parameter to "Rate" to match other Darkglass plugins and limit it's range
 
 The original README contents follows after this line.
 

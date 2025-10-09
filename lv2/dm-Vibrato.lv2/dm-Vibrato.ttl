@@ -69,12 +69,12 @@ A mono vibrato effect.
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 4 ;
-		lv2:symbol "freq" ;
-		lv2:name "Freq" ;
+		lv2:symbol "rate" ;
+		lv2:name "Rate" ;
 		lv2:portProperty pp:logarithmic ;
 		lv2:default 5.0 ;
 		lv2:minimum 0.1 ;
-		lv2:maximum 30.0 ;
+		lv2:maximum 20.0 ;
 		units:unit units:hz
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
@@ -94,10 +94,10 @@ A mono vibrato effect.
 		lv2:portProperty lv2:enumeration ;
 		lv2:default 1 ;
 		lv2:minimum 1 ;
-		lv2:maximum 5 ;
+		lv2:maximum 2 ;
 		lv2:scalePoint [rdfs:label "Sine"; rdf:value 1];
 		lv2:scalePoint [rdfs:label "Triangle"; rdf:value 2];
-		lv2:scalePoint [rdfs:label "Saw Up"; rdf:value 3];
-		lv2:scalePoint [rdfs:label "Saw Down"; rdf:value 4];
-		lv2:scalePoint [rdfs:label "Square"; rdf:value 5];
+		# lv2:scalePoint [rdfs:label "Saw Up"; rdf:value 3];
+		# lv2:scalePoint [rdfs:label "Saw Down"; rdf:value 4];
+		# lv2:scalePoint [rdfs:label "Square"; rdf:value 5];
 	] .

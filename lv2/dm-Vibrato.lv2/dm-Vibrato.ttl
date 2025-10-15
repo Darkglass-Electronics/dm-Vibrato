@@ -17,7 +17,7 @@
 <urn:darkglass:dm-Vibrato>
 	a lv2:Plugin , lv2:ModulatorPlugin ;
 	dg:abbreviation "VIB" ;
-	doap:name "Vibrato" ;
+	doap:name "Vibralis Vibrato" ;
 	doap:license <http://spdx.org/licenses/GPL-3.0.html> ;
 	doap:developer [
 		foaf:name "Dave Mollen" ;
